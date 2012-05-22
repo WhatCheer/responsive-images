@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Responsive-Images by WhatCheer</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Responsive-Images</h1>
+        <p>An experimental JavaScript solution to the responsive images problem.</p>
+        <p class="view"><a href="https://github.com/WhatCheer/responsive-images">View the Project on GitHub <small>WhatCheer/responsive-images</small></a></p>
+        <ul>
+          <li><a href="https://github.com/WhatCheer/responsive-images/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/WhatCheer/responsive-images/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/WhatCheer/responsive-images">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>What is this?</h1>
+
+<p>This repository holds What Cheer's spin on the JavaScript solution to the <a href="http://www.bram.us/2012/03/01/the-slow-elephant-in-the-responsive-images-room/">responsive</a> <a href="http://blog.cloudfour.com/the-real-conflict-behind-picture-and-srcset/">images</a> <a href="http://www.alistapart.com/articles/responsive-images-and-web-standards-at-the-turning-point/">problem</a>.</p>
+
+<p>Our JavaScript follows the existing pattern of storing the sizes in DOM attributes, similar to projects like <a href="https://github.com/teleject/hisrc">HiSRC</a>, but with the twist of having only two attributes.</p>
+
+<p>We have used this code in production but it is still a little wobbly, so YMMV.</p>
+
+<h1>How do I use it?</h1>
+
+<p>This is a full client side/markup solution, so you'd better be able to edit all your HTML. If you can't, or need something a little more automatic, perhaps <a href="http://adaptive-images.com/">Adaptive Images</a>.</p>
+
+<h2>The JavaScript</h2>
+
+<p>This library has no dependencies, so you can just drop in <tt>responsive-images.min.js</tt> and then call <tt>WhatCheer.Responsive.updateImages</tt> whenever you need to.  Here's an example:</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"responsive-images.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre>
+</div>
+
+
+<p>You may find it better to de-bounce your <tt>window.onresize</tt> calls a bit.  The code to prevent multiple requests for image assets does not exist, so it's your responsibility, if you care.</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;script&gt;</span>
+    <span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">resizeDebounce</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">clearTimeout</span><span class="p">(</span> <span class="nx">resizeDebounce</span> <span class="p">);</span>
+            <span class="nx">resizeDebounce</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span><span class="p">(</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">,</span> <span class="mi">150</span> <span class="p">);</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre>
+</div>
+
+
+<h2>The Markup</h2>
+
+<p>Your HTML communicates to the script through two attributes, <tt>data-format</tt> and <tt>data-breaks</tt>.</p>
+
+<h3>data-format</h3>
+
+<p>This attribute communicates the format of the path for image versions.  We assume you keep all of your files together in one place and have a reasonable, consistent naming scheme.</p>
+
+<p>In the path format string any instances of the string <tt>{{s}}</tt> will be replaced with the breakpoint name to create the final path for a file.</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;img</span> <span class="na">data-format=</span><span class="s">"images/{{s}}.png"</span> <span class="nt">/&gt;</span>
+</pre>
+</div>
+
+
+<h3>data-breaks</h3>
+
+<p>This attribute specifies the width-based breakpoints for images.  These breakpoints are given in pixel values, with a semicolon <tt>;</tt> delimeter.  They should proceed from largest to smallest.</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;img</span> <span class="na">data-breaks=</span><span class="s">"900;600;400"</span> <span class="nt">/&gt;</span>
+</pre>
+</div>
+
+
+<p>Optionally these breakpoints can have name strings, which are separated from the size value by a colon <tt>:</tt>.</p>
+
+<div class="highlight">
+<pre><span class="nt">&lt;img</span> <span class="na">data-breaks=</span><span class="s">"900;600:medium;400"</span> <span class="nt">/&gt;</span>
+</pre>
+</div>
+
+
+<h1>Examples</h1>
+
+<h2>Regular</h2>
+
+<div class="highlight">
+<pre><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Responsive Images<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"images/400.jpg"</span> <span class="na">data-format=</span><span class="s">"images/{s}.jpg"</span> <span class="na">data-breaks=</span><span class="s">"900;600:medium;400"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"responsive-images.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script&gt;</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+        <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+</div>
+
+
+<h2>Weird Files All Over The Place</h2>
+
+<div class="highlight">
+<pre><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;head&gt;</span>
+        <span class="nt">&lt;title&gt;</span>Responsive Images<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;/head&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"images/400.jpg"</span> <span class="na">data-format=</span><span class="s">"{s}"</span> <span class="na">data-breaks=</span><span class="s">"900:http://google.com/secret-files/900.jpg;600:http://loljk.s3.aws.com/medium.jpg;400:images/400.jpg"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"responsive-images.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script&gt;</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">onresize</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">onload</span> <span class="o">=</span> <span class="nx">WhatCheer</span><span class="p">.</span><span class="nx">Responsive</span><span class="p">.</span><span class="nx">updateImages</span><span class="p">;</span>
+        <span class="nt">&lt;/script&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+</div>
+
+
+<h1>Contributing</h1>
+
+<p>We aren't perfect.  If you see a bug, please let us know via the issues tab!</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/WhatCheer">WhatCheer</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
