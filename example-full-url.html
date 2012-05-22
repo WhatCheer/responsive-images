@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Responsive Images</title>
+	</head>
+	<body>
+		<img src="images/400.jpg" data-format="{s}" data-breaks="900:https://raw.github.com/WhatCheer/responsive-images/gh-pages/images/900.jpg;600:https://raw.github.com/WhatCheer/responsive-images/gh-pages/images/medium.jpg;400:images/400.jpg" />
+		<script src="https://raw.github.com/WhatCheer/responsive-images/master/responsive-images.min.js"></script>
+		<script>
+			window.onresize = WhatCheer.Responsive.updateImages;
+			WhatCheer.Responsive.updateImages();
+		</script>
+	</body>
+</html>

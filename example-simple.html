@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Responsive Images</title>
+	</head>
+	<body>
+		<img src="images/400.jpg" data-format="images/{s}.jpg" data-breaks="900;600:medium;400" />
+		<script src="https://raw.github.com/WhatCheer/responsive-images/master/responsive-images.min.js"></script>
+		<script>
+			window.onresize = WhatCheer.Responsive.updateImages;
+			document.body.onload = WhatCheer.Responsive.updateImages;
+		</script>
+	</body>
+</html>
