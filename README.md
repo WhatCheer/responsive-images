@@ -4,7 +4,7 @@ This repository holds What Cheer's spin on the JavaScript solution to the [respo
 
 Our JavaScript follows the existing pattern of storing the sizes in DOM attributes, similar to projects like [HiSRC](https://github.com/teleject/hisrc), but with the twist of having only two attributes.
 
-We have used this code [in production](http://thisbookisabouttravel.com/) but it is still a little wobbly, so YMMV.
+We have used this code in production but it is still a little wobbly, so YMMV.
 
 # How do I use it?
 
@@ -14,17 +14,17 @@ This is a full client side/markup solution, so you'd better be able to edit all 
 
 This library has no dependencies, so you can just drop in <tt>responsive-images.min.js</tt> and then call <tt>WhatCheer.Responsive.updateImages</tt> whenever you need to.  Here's an example:
 
-'''html
+```html
 <script src="responsive-images.min.js"></script>
 <script>
 	window.onresize = WhatCheer.Responsive.updateImages;
 	document.body.onload = WhatCheer.Responsive.updateImages;
 </script>
-'''
+```
 
 You may find it better to de-bounce your <tt>window.onresize</tt> calls a bit.  The code to prevent multiple requests for image assets does not exist, so it's your responsibility, if you care.
 
-'''html
+```html
 <script>
 	( function () {
 		WhatCheer.Responsive.updateImages();
@@ -35,7 +35,7 @@ You may find it better to de-bounce your <tt>window.onresize</tt> calls a bit.  
 		};
 	} );
 </script>
-'''
+```
 
 ## The Markup
 
@@ -47,29 +47,29 @@ This attribute communicates the format of the path for image versions.  We assum
 
 In the path format string any instances of the string <tt>{{s}}</tt> will be replaced with the breakpoint name to create the final path for a file.
 
-'''html
+```html
 <img data-format="images/{{s}}.png" />
-'''
+```
 
 ### data-breaks
 
 This attribute specifies the width-based breakpoints for images.  These breakpoints are given in pixel values, with a semicolon <tt>;</tt> delimeter.  They should proceed from largest to smallest.
 
-'''html
+```html
 <img data-breaks="900;600;400" />
-'''
+```
 
 Optionally these breakpoints can have name strings, which are separated from the size value by a colon <tt>:</tt>.
 
-'''html
+```html
 <img data-breaks="900;600:medium;400" />
-'''
+```
 
 # Examples
 
 ## Regular
 
-'''html
+```html
 <!doctype html>
 <html>
 	<head>
@@ -84,11 +84,11 @@ Optionally these breakpoints can have name strings, which are separated from the
 		</script>
 	</body>
 </html>
-'''
+```
 
 ## Weird Files All Over The Place
 
-'''html
+```html
 <!doctype html>
 <html>
 	<head>
@@ -103,7 +103,7 @@ Optionally these breakpoints can have name strings, which are separated from the
 		</script>
 	</body>
 </html>
-'''
+```
 
 # Contributing
 
